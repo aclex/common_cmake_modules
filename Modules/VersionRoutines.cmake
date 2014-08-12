@@ -1,0 +1,13 @@
+set(THREE_PART_VERSION_REGEX "[0-9]+\\.[0-9]+\\.[0-9]+")
+
+macro(three_part_version_to_vars version major minor patch)
+	if(${version} MATCHES ${THREE_PART_VERSION_REGEX})
+		string(REGEX MATCH ${THREE_PART_VERSION_REGEX} VERSION_MATCHED "${version}")
+		string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" ${major} "${VERSION_MATCHED}")
+		string(REGEX REPLACE "^[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" ${minor} "${VERSION_MATCHED}")
+		string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" ${patch} "${version}")
+	else(${version} MATCHES ${THREE_PART_VERSION_REGEX})
+		message("macro(three_part_version_to_vars ${version} ${major} ${minor} ${patch})")
+		message(FATAL_ERROR "Problem parsing version string, I can't parse it properly.")
+	endif(${version} MATCHES ${THREE_PART_VERSION_REGEX})
+endmacro(three_part_version_to_vars)
