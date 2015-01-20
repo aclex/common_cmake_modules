@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION @CMAKE_VERSION@)
+
+# check manually with `cmake --debug-trycompile --build-and-test "." "."` in the target directory
+
+try_compile(
+	COMPILE_RESULT
+	@CMAKE_CURRENT_BINARY_DIR@
+	SOURCES @TEST_SOURCES@
+	CMAKE_FLAGS -DCMAKE_CXX_LINK_EXECUTABLE='echo not linking now' -DINCLUDE_DIRECTORIES=@TEST_INCLUDE_DIRECTORIES@
+	COMPILE_DEFINITIONS @TEST_COMPILE_DEFINITIONS@
+	LINK_LIBRARIES @TEST_LINK_LIBRARIES@
+	OUTPUT_VARIABLE COMPILE_LOG
+)
+
+message("result: ${COMPILE_RESULT}")
+message("log: ${COMPILE_LOG}")
+
+if (${COMPILE_RESULT})
+	message(FATAL_ERROR "This shouldn't have been compiled")
+endif()
