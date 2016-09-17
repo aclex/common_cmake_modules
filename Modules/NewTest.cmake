@@ -12,21 +12,28 @@
 set(THIS_IS_MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(FAILTEST_CMAKELISTS_FILENAME "failcompile_cmakelists.txt.in")
 
-function(new_test srcs libraries)
+function(new_test srcs)
 	list(GET srcs 0 name)
 	string(REGEX REPLACE "(\\.cpp|\\.hpp|\\.c|\\.h)" "" name ${name})
 	add_executable(${name} ${srcs})
-	target_link_libraries(${name} ${libraries})
+
+	if(DEFINED ARGV1)
+		set(libraries ${ARGV1})
+		target_link_libraries(${name} ${libraries})
+	endif()
+
 	add_test(${name} ${RUNTIME_OUTPUT_DIRECTORY}/${name})
 endfunction()
 
-function(new_compilation_fail_test srcs libraries)
+function(new_compilation_fail_test srcs)
 	get_property(TEST_INCLUDE_DIRECTORIES DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
 	get_property(TEST_COMPILE_DEFINITIONS DIRECTORY PROPERTY DEFINITIONS)
 
 	string(REPLACE ";" "\;" TEST_INCLUDE_DIRECTORIES "${TEST_INCLUDE_DIRECTORIES}")
 
-	set(TEST_LINK_LIBRARIES ${libraries})
+	if(DEFINED ARGV1)
+		set(TEST_LINK_LIBRARIES ${ARGV1})
+	endif()
 
 	set(TEST_SOURCES "")
 
