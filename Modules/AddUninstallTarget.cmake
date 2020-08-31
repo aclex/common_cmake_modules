@@ -12,4 +12,8 @@ function(add_uninstall_target)
 	endif ()
 endfunction(add_uninstall_target)
 
-add_uninstall_target()
+get_directory_property(EXCLUDE_FROM_ALL DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} EXCLUDE_FROM_ALL)
+
+if (NOT EXCLUDE_FROM_ALL)
+	add_uninstall_target()
+endif()
