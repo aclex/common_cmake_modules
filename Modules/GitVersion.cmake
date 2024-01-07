@@ -22,6 +22,27 @@ function(git_version VER)
 	endif()
 endfunction()
 
+# Function that determines current project git head commit hash
+#
+# Example:
+# git_commit(COMMIT)
+#
+# Writes current project git head commit hash into variable 'COMMIT'
+#
+# Output example: 907128a62a384034c4af8ed0af9882f3b4846548
+#
+function(git_commit COMMIT)
+	execute_process(COMMAND git rev-parse HEAD
+					OUTPUT_VARIABLE TEMP_COMMIT
+					ERROR_QUIET)
+	if(TEMP_COMMIT)
+		string(REGEX REPLACE "(\r?\n)+$" "" TEMP_COMMIT "${TEMP_COMMIT}")
+		set(${COMMIT} ${TEMP_COMMIT} PARENT_SCOPE)
+	else()
+		set(${COMMIT} "" PARENT_SCOPE)
+	endif()
+endfunction()
+
 function(git_commit_version VER)
 	execute_process(COMMAND git describe --tags --long
 					COMMAND sed s/^v//
